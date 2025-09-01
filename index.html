@@ -45,16 +45,29 @@
         }
 
         .main-header-title {
-            font-size: 1.8rem;
+    font-size: 1.8rem; /* Tamanho ajustado para o novo título */
+    font-weight: 700;
+    color: var(--cor-vermelho); /* Cor vermelha para o novo título */
+    margin-bottom: 0.5rem; /* Espaçamento entre o novo título e o parágrafo */
+}
+
+       
+        (--cor-texto); 
+            display: none; /* Oculta o título antigo */
+        }
+        
+        /* Novo título e subtítulo */
+        .new-header-title {
+            font-size: 1.8rem; /* Tamanho ajustado para o novo título */
             font-weight: 700;
-            color: var(--cor-vermelho);
-            margin-bottom: 0.5rem;
+            color: var(--cor-vermelho); /* Cor vermelha para o novo título */
+            margin-bottom: 0.5rem; /* Espaçamento entre o novo título e o parágrafo */
         }
 
         header p { 
             font-size: 1.1rem; 
             color: var(--cor-texto-claro); 
-            margin-top: 0;
+            margin-top: 0; /* Garante que não haja margem superior extra */
         }
 
         #floor-plan-container {
@@ -105,26 +118,20 @@
             font-weight: 600;
             font-size: 1rem;
             line-height: 1.2;
-            white-space: pre-wrap;
+            white-space: pre-wrap; /* Permite quebras de linha no nome */
         }
         
         .room-capacity {
             display: flex;
             align-items: center;
-            justify-content: center; /* Centraliza o conteúdo de capacidade */
             gap: 5px;
             font-size: 0.9rem;
             font-weight: 500;
             background-color: rgba(0,0,0,0.1);
             padding: 2px 8px;
             border-radius: 1rem;
-            flex-wrap: wrap; /* Permite que os ícones quebrem linha se houver muitos */
         }
-        .room-capacity svg { 
-            width: 14px; 
-            height: 14px; 
-            vertical-align: middle; 
-        }
+        .room-capacity svg { width: 14px; height: 14px; }
         
         .meeting-title {
             font-size: 0.8rem;
@@ -137,20 +144,18 @@
         .room.available { background-color: var(--cor-verde); color: white; border-color: #059669; }
         .room.occupied { background-color: var(--cor-vermelho); color: white; border-color: #dc2626; }
         
-        /* Posições e Tamanhos das Salas (TODAS PADRONIZADAS) */
         #sala1 { top: 40px; left: 40px; width: 220px; height: 120px; font-size: 0.9rem; }
         #sala2 { top: 40px; left: 300px; width: 220px; height: 120px; font-size: 0.9rem; }
         #sala3 { top: 200px; left: 40px; width: 220px; height: 120px; font-size: 0.9rem; }
-        #sala4 { top: 200px; left: 300px; width: 220px; height: 120px; font-size: 0.9rem; } /* Sala Marli agora no tamanho padrão */
-
+        #sala4 { top: 200px; left: 300px; width: 220px; height: 200px; }
 
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(17, 24, 39, 0.6); justify-content: center; align-items: center; backdrop-filter: blur(4px); }
         .modal-content { background-color: var(--cor-principal); padding: 2.5rem; border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); width: 90%; max-width: 800px; animation: fadeInScale 0.3s ease-out; }
         @keyframes fadeInScale { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--cor-borda); padding-bottom: 1rem; margin-bottom: 1.5rem; }
         .modal-title { font-size: 1.5rem; font-weight: 600; }
-        .modal-title .capacity-tag { font-size: 1rem; font-weight: 500; color: var(--cor-texto-claro); margin-left: 1rem; display: flex; align-items: center; gap: 5px; } /* Ajuste no display para icones */
-        .modal-title .capacity-tag svg { width: 20px; height: 20px; vertical-align: middle; }
+        .modal-title .capacity-tag { font-size: 1rem; font-weight: 500; color: var(--cor-texto-claro); margin-left: 1rem; }
+        .modal-title .capacity-tag svg { width: 20px; height: 20px; vertical-align: middle; margin-right: 5px; }
         .close-button { background: none; border: none; font-size: 2rem; cursor: pointer; color: var(--cor-texto-claro); padding: 0; line-height: 1; }
         #modal-views { display: flex; gap: 2rem; flex-wrap: wrap;}
         #calendar-view, #schedule-view { width: 100%; min-width: 300px; flex: 1; }
@@ -184,11 +189,11 @@
 <body>
 
     <div class="container">
-        <header>
-            <h1 class="main-header-title">Agendamento de salas de reunião - Escritório Administrativo</h1>
-            <p>Selecione uma sala na planta para verificar a disponibilidade e agendar sua reunião.</p>
-            <button id="general-calendar-btn" class="btn btn-secondary">Ver Agenda do Dia</button>
-        </header>
+<header>
+    <h1 class="main-header-title">Agendamento de salas de reunião - Escritório Administrativo</h1>
+    <p>Selecione uma sala na planta para verificar a disponibilidade e agendar sua reunião.</p>
+    <button id="general-calendar-btn" class="btn btn-secondary">Ver Agenda do Dia</button>
+</header>
 
         <main>
             <div id="floor-plan-container">
@@ -246,35 +251,7 @@
         const generalModal = document.getElementById('general-calendar-modal');
         const modalRoomNameEl = document.getElementById('modal-room-name');
         
-        // --- NOVA FUNÇÃO PARA GERAR ÍCONES DE CADEIRAS E MESAS ---
-        function generateCapacityIcons(capacity) {
-            let svgIcons = '';
-            // Ícone de mesa base (retângulo)
-            const tableSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 10h16v4H4z"/></svg>`;
-            // Ícone de cadeira (ajustado para ser menor e simples)
-            const chairSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 18v3h3v-3h10v3h3v-3h-2v-2H6v2zM19 9h-4V3H9v6H5l-1 9h16l-1-9h-4zm-7 0H9V5h6v4h-3z"/></svg>`;
-
-            // Lógica para adicionar mesas e cadeiras baseadas na capacidade
-            // Exemplo: 1 mesa para até 5 pessoas, 2 mesas para até 10, 3 mesas para até 15.
-            // Isso pode ser ajustado conforme a sua preferência de layout.
-            if (capacity <= 5) {
-                svgIcons += tableSVG;
-                for (let i = 0; i < capacity; i++) {
-                    svgIcons += chairSVG;
-                }
-            } else if (capacity <= 10) {
-                svgIcons += tableSVG + tableSVG; // Duas mesas
-                for (let i = 0; i < capacity; i++) {
-                    svgIcons += chairSVG;
-                }
-            } else { // Capacidade maior, mais mesas
-                svgIcons += tableSVG + tableSVG + tableSVG; // Três mesas
-                for (let i = 0; i < capacity; i++) {
-                    svgIcons += chairSVG;
-                }
-            }
-            return svgIcons;
-        }
+        const userIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
 
         function openModal(modalElement) { modalElement.style.display = 'flex'; }
         function closeModal(modalElement) { modalElement.style.display = 'none'; }
@@ -284,12 +261,9 @@
             const room = roomsData[roomId];
             if (!room) return;
             
-            // --- ATUALIZAÇÃO AQUI: Usa a nova função de ícones para o modal ---
             modalRoomNameEl.innerHTML = `
                 ${room.name} 
-                <span class="capacity-tag">
-                    ${generateCapacityIcons(room.capacity)} ${room.capacity} lugares
-                </span>
+                <span class="capacity-tag">(${userIconSVG} ${room.capacity} lugares)</span>
             `;
             
             openModal(bookingModal);
@@ -337,11 +311,11 @@
                 
                 roomEl.classList.remove('available', 'occupied');
                 
-                // --- ATUALIZAÇÃO AQUI: Usa a nova função de ícones para a planta ---
+                // --- ALTERAÇÃO AQUI: Novo formato de texto para nome e capacidade ---
                 let roomHTML = `
                     <div class="room-info">
                         <span class="room-name">Sala de reunião<br>${room.name}</span>
-                        <span class="room-capacity">${generateCapacityIcons(room.capacity)} Capacidade: ${room.capacity} pessoas</span>
+                        <span class="room-capacity">${userIconSVG} Capacidade: ${room.capacity} pessoas</span>
                     </div>
                 `;
 
