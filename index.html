@@ -267,9 +267,30 @@
             clearSchedule();
         }
 
-        function openGeneralCalendar() { /* ...código existente... */ }
+        function openGeneralCalendar() {
+            const listEl = document.getElementById('general-schedule-list');
+            listEl.innerHTML = '';
+            const today = new Date();
+            const dateKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+            let allBookingsToday = [];
+            for (const roomId in roomsData) {
+                const dayBookings = roomsData[roomId].bookings?.[dateKey] || [];
+                dayBookings.forEach(booking => allBookingsToday.push({ ...booking, roomName: roomsData[roomId].name }));
+            }
+            allBookingsToday.sort((a, b) => a.hour - b.hour);
+            if (allBookingsToday.length === 0) {
+                listEl.innerHTML = '<p style="text-align:center; color: var(--cor-texto-claro);">Nenhuma reunião agendada para hoje.</p>';
+            } else {
+                allBookingsToday.forEach(booking => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'general-schedule-item';
+                    itemEl.innerHTML = `<p class="time">${String(booking.hour).padStart(2, '0')}:00 - Em <span class="room-name">${booking.roomName}</span></p><p><strong>Reunião:</strong> ${booking.title}</p><p><small><strong>Responsável:</strong> ${booking.user}</small></p>`;
+                    listEl.appendChild(itemEl);
+                });
+            }
+            openModal(generalModal);
+        }
         
-        // --- NOVA LÓGICA DE CANCELAMENTO COM SENHA ---
         const ADMIN_PASSWORD = "AgendasAndra123";
 
         function openAdminCancelPanel() {
@@ -278,7 +299,7 @@
             
             let allFutureBookings = [];
             const today = new Date();
-            today.setHours(0, 0, 0, 0); // Zera a hora para comparar apenas o dia
+            today.setHours(0, 0, 0, 0);
 
             for (const roomId in roomsData) {
                 const room = roomsData[roomId];
@@ -287,10 +308,9 @@
                         const dateParts = dateKey.split('-').map(Number);
                         const bookingDate = new Date(dateParts[0], dateParts[1], dateParts[2]);
                         
-                        if (bookingDate >= today) { // Apenas agendamentos de hoje em diante
+                        if (bookingDate >= today) {
                             const dayBookings = room.bookings[dateKey];
                             dayBookings.forEach(booking => {
-                                // Adiciona apenas se o horário ainda não passou (para agendamentos de hoje)
                                 const now = new Date();
                                 if (bookingDate > today || (bookingDate.getTime() === today.getTime() && booking.hour >= now.getHours())) {
                                     allFutureBookings.push({ ...booking, roomId, dateKey, roomName: room.name, date: bookingDate });
@@ -322,7 +342,6 @@
                     listEl.appendChild(itemEl);
                 });
             }
-
             openModal(adminCancelModal);
         }
 
@@ -330,68 +349,119 @@
             if (!confirm(`Tem certeza que deseja cancelar a reserva "${booking.title}" na sala ${booking.roomName}?`)) return;
 
             const roomDocRef = doc(db, "rooms", booking.roomId);
+            // Criamos um novo objeto booking sem os campos extras que adicionamos (roomId, dateKey, etc)
+            // para garantir que ele corresponda exatamente ao objeto no Firestore.
+            const bookingToRemove = {
+                hour: booking.hour,
+                title: booking.title,
+                user: booking.user
+            };
             try {
-                await updateDoc(roomDocRef, { [`bookings.${booking.dateKey}`]: arrayRemove(booking) });
+                await updateDoc(roomDocRef, { [`bookings.${booking.dateKey}`]: arrayRemove(bookingToRemove) });
                 alert("Reserva cancelada com sucesso!");
-                closeModal(adminCancelModal); // Fecha o painel para recarregar com dados atualizados na próxima vez
             } catch(e) {
                 console.error("Erro ao cancelar reserva: ", e);
                 alert("Ocorreu um erro ao cancelar.");
             }
         }
         
-        function updateRoomStatusOnFloorPlan() { /* ...código existente... */ }
+        function updateRoomStatusOnFloorPlan() {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const todayKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+
+            document.querySelectorAll('.room').forEach(roomEl => {
+                const roomId = roomEl.dataset.roomId;
+                const room = roomsData[roomId];
+                if (!room) return;
+
+                const bookingsToday = room.bookings?.[todayKey] || [];
+                const currentBooking = bookingsToday.find(b => b.hour === currentHour);
+                
+                roomEl.classList.remove('available', 'occupied');
+                
+                let roomHTML = `
+                    <div class="room-info">
+                        <span class="room-name">Sala de reunião<br>${room.name}</span>
+                        <span class="room-capacity">${userIconSVG} Capacidade: ${room.capacity} pessoas</span>
+                    </div>
+                `;
+
+                if (currentBooking) {
+                    roomEl.classList.add('occupied');
+                    roomHTML += `<span class="meeting-title">${currentBooking.title}</span>`;
+                } else {
+                    roomEl.classList.add('available');
+                }
+                
+                roomEl.innerHTML = roomHTML;
+            });
+        }
+        
+        const calendarEl = document.getElementById('calendar');
+        const monthDisplayEl = document.getElementById('month-display');
+        const timeSlotsEl = document.getElementById('time-slots');
+        const scheduleTitleEl = document.getElementById('schedule-title');
 
         document.addEventListener('DOMContentLoaded', () => {
-            // ... código de inicialização existente ...
+            document.querySelectorAll('.room').forEach(roomEl => {
+                roomEl.addEventListener('click', () => openBookingModal(roomEl.dataset.roomId));
+            });
+            document.getElementById('general-calendar-btn').addEventListener('click', openGeneralCalendar);
             
-            // NOVO: Evento para o botão de cancelamento
             document.getElementById('admin-cancel-btn').addEventListener('click', () => {
                 openModal(passwordModal);
                 document.getElementById('admin-password-input').focus();
             });
 
-            // NOVO: Evento para o botão de submeter senha
             document.getElementById('password-submit-btn').addEventListener('click', () => {
                 const passwordInput = document.getElementById('admin-password-input');
                 if (passwordInput.value === ADMIN_PASSWORD) {
                     closeModal(passwordModal);
-                    passwordInput.value = ''; // Limpa a senha
+                    passwordInput.value = '';
                     openAdminCancelPanel();
                 } else {
                     alert('Senha incorreta!');
                     passwordInput.value = '';
                 }
             });
-            // Permite usar "Enter" para submeter a senha
+            
             document.getElementById('admin-password-input').addEventListener('keyup', (event) => {
                 if (event.key === 'Enter') {
                     document.getElementById('password-submit-btn').click();
                 }
             });
-            
-            // Listener em tempo real do Firebase (atualizado para recarregar o painel admin se estiver aberto)
+
+            document.querySelectorAll('.close-button').forEach(btn => {
+                const modalToClose = document.querySelector(btn.dataset.target);
+                btn.onclick = () => closeModal(modalToClose);
+            });
+            window.onclick = (event) => {
+                if (event.target == bookingModal) closeModal(bookingModal);
+                if (event.target == generalModal) closeModal(generalModal);
+                if (event.target == passwordModal) closeModal(passwordModal);
+                if (event.target == adminCancelModal) closeModal(adminCancelModal);
+            };
+
             const roomsCollection = collection(db, "rooms");
             onSnapshot(roomsCollection, (snapshot) => {
                 console.log("Dados do Firebase atualizados!");
                 snapshot.docChanges().forEach((change) => {
                     roomsData[change.doc.id] = change.doc.data();
                 });
-                
                 updateRoomStatusOnFloorPlan();
-
                 if (bookingModal.style.display === 'flex' && selectedRoomId) {
                     loadScheduleForDate(selectedDate);
                 }
-                // NOVO: Se o painel de admin estiver aberto, recarrega-o para refletir mudanças
                 if (adminCancelModal.style.display === 'flex') {
                     openAdminCancelPanel();
                 }
             });
         });
-        function loadCalendar(){const e=document.getElementById("calendar"),t=document.getElementById("month-display");e.innerHTML="";const n=new Date(selectedDate);n.setDate(1);const a=n.getMonth(),d=n.getFullYear();t.textContent=`${n.toLocaleDateString("pt-BR",{month:"long"})} ${d}`;const l=n.getDay(),o=new Date(d,a+1,0).getDate();["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"].forEach(t=>{const n=document.createElement("div");n.className="calendar-header",n.innerText=t,e.appendChild(n)});for(let t=0;t<l;t++){const n=document.createElement("div");n.classList.add("day","empty"),e.appendChild(n)}for(let t=1;t<=o;t++){const n=document.createElement("div");n.classList.add("day"),n.textContent=t,t===selectedDate.getDate()&&a===selectedDate.getMonth()&&d===selectedDate.getFullYear()&&(n.classList.add("selected"),loadScheduleForDate(selectedDate)),n.addEventListener("click",()=>{selectedDate=new Date(d,a,t),document.querySelectorAll(".day").forEach(e=>e.classList.remove("selected")),n.classList.add("selected"),loadScheduleForDate(selectedDate)}),e.appendChild(n)}}
-        function loadScheduleForDate(e){const t=document.getElementById("time-slots"),n=document.getElementById("schedule-title");t.innerHTML="",n.textContent=`Horários para ${e.toLocaleDateString("pt-BR")}`;const a=`${e.getFullYear()}-${e.getMonth()}-${e.getDate()}`,d=roomsData[selectedRoomId]?.bookings?.[a]||[];for(let e=8;e<18;e++){const n=d.find(t=>t.hour===e),a=document.createElement("div");a.classList.add("time-slot"),n?a.innerHTML=`\n                        <div class="time-slot-header">\n                            <span class="time-slot-info">${String(e).padStart(2,"0")}:00 - ${String(e+1).padStart(2,"0")}:00</span>\n                        </div>\n                        <div class="booking-details"><strong>${n.title}</strong><br>Agendado por: ${n.user}</div>`: (a.innerHTML=`\n                        <div class="time-slot-header">\n                            <span class="time-slot-info">${String(e).padStart(2,"0")}:00 - ${String(e+1).padStart(2,"0")}:00</span>\n                            <button class="btn btn-primary reserve-btn">Reservar</button>\n                        </div>\n                        <div class="booking-form">\n                            <input type="text" placeholder="Título da Reunião" class="form-input title-input">\n                            <input type="text" placeholder="Seu Nome" class="form-input user-input">\n                            <div class="form-actions"><button class="btn btn-primary confirm-reserve-btn">Confirmar</button></div>\n                        </div>`,a.querySelector(".reserve-btn").onclick=()=>{a.querySelector(".booking-form").style.display="flex",a.querySelector(".reserve-btn").style.display="none"},a.querySelector(".confirm-reserve-btn").onclick=()=>{const t=a.querySelector(".title-input").value,n=a.querySelector(".user-input").value;reserveTimeSlot(selectedDate,e,t,n)}),t.appendChild(a)}}
-        async function reserveTimeSlot(e,t,n,a){if(!n||!a)return void alert("Por favor, preencha o título e seu nome.");const d=`${e.getFullYear()}-${e.getMonth()}-${e.getDate()}`,l=doc(db,"rooms",selectedRoomId),o={hour:t,title:n,user:a};try{await updateDoc(l,{[`bookings.${d}`]:arrayUnion(o)}),alert("Sala reservada com sucesso!")}catch(e){console.error("Erro ao reservar: ",e),alert("Ocorreu um erro.")}}
+        
+        function loadCalendar(){const e=document.getElementById("calendar"),t=document.getElementById("month-display");e.innerHTML="";const n=new Date(selectedDate);n.setDate(1);const o=n.getMonth(),r=n.getFullYear();t.textContent=`${n.toLocaleDateString("pt-BR",{month:"long"})} ${r}`;const a=n.getDay(),c=new Date(r,o+1,0).getDate();["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"].forEach(t=>{const n=document.createElement("div");n.className="calendar-header",n.innerText=t,e.appendChild(n)});for(let t=0;t<a;t++){const n=document.createElement("div");n.classList.add("day","empty"),e.appendChild(n)}for(let t=1;t<=c;t++){const i=document.createElement("div");i.classList.add("day"),i.textContent=t,t===selectedDate.getDate()&&o===selectedDate.getMonth()&&r===selectedDate.getFullYear()&&(i.classList.add("selected"),loadScheduleForDate(selectedDate)),i.addEventListener("click",()=>{selectedDate=new Date(r,o,t),document.querySelectorAll(".day").forEach(e=>e.classList.remove("selected")),i.classList.add("selected"),loadScheduleForDate(selectedDate)}),e.appendChild(i)}}
+        function loadScheduleForDate(e){const t=document.getElementById("time-slots"),n=document.getElementById("schedule-title");t.innerHTML="",n.textContent=`Horários para ${e.toLocaleDateString("pt-BR")}`;const o=`${e.getFullYear()}-${e.getMonth()}-${e.getDate()}`,r=roomsData[selectedRoomId]?.bookings?.[o]||[];for(let e=8;e<18;e++){const o=r.find(t=>t.hour===e),a=document.createElement("div");a.classList.add("time-slot"),o?a.innerHTML=`<div class="time-slot-header"><span class="time-slot-info">${String(e).padStart(2,"0")}:00 - ${String(e+1).padStart(2,"0")}:00</span></div><div class="booking-details"><strong>${o.title}</strong><br>Agendado por: ${o.user}</div>`: (a.innerHTML=`<div class="time-slot-header"><span class="time-slot-info">${String(e).padStart(2,"0")}:00 - ${String(e+1).padStart(2,"0")}:00</span><button class="btn btn-primary reserve-btn">Reservar</button></div><div class="booking-form"><input type="text" placeholder="Título da Reunião" class="form-input title-input"><input type="text" placeholder="Seu Nome" class="form-input user-input"><div class="form-actions"><button class="btn btn-primary confirm-reserve-btn">Confirmar</button></div></div>`,a.querySelector(".reserve-btn").onclick=()=>{a.querySelector(".booking-form").style.display="flex",a.querySelector(".reserve-btn").style.display="none"},a.querySelector(".confirm-reserve-btn").onclick=()=>{const t=a.querySelector(".title-input").value,n=a.querySelector(".user-input").value;reserveTimeSlot(selectedDate,e,t,n)}),t.appendChild(a)}}
+        async function reserveTimeSlot(e,t,n,o){if(!n||!o)return void alert("Por favor, preencha o título e seu nome.");const r=`${e.getFullYear()}-${e.getMonth()}-${e.getDate()}`,a=doc(db,"rooms",selectedRoomId),c={hour:t,title:n,user:o};try{await updateDoc(a,{[`bookings.${r}`]:arrayUnion(c)}),alert("Sala reservada com sucesso!")}catch(e){console.error("Erro ao reservar: ",e),alert("Ocorreu um erro.")}}
         function clearSchedule(){document.getElementById("schedule-title").textContent="Selecione um dia",document.getElementById("time-slots").innerHTML='<p style="color: var(--cor-texto-claro); text-align: center;">Selecione um dia para ver os horários.</p>'}
     </script>
 </body>
