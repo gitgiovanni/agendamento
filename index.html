@@ -44,10 +44,15 @@
             margin-bottom: 1rem;
         }
 
-        header h1 { 
-            font-size: 2.5rem; 
-            font-weight: 700; 
-            color: var(--cor-texto); 
+        .main-header-title {
+    font-size: 1.8rem; /* Tamanho ajustado para o novo título */
+    font-weight: 700;
+    color: var(--cor-vermelho); /* Cor vermelha para o novo título */
+    margin-bottom: 0.5rem; /* Espaçamento entre o novo título e o parágrafo */
+}
+
+       
+        (--cor-texto); 
             display: none; /* Oculta o título antigo */
         }
         
@@ -184,11 +189,11 @@
 <body>
 
     <div class="container">
-        <header>
-            <h1 class="new-header-title">Agendamento de salas de reunião - Escritório Administrativo</h1>
-            <p>Selecione uma sala na planta para verificar a disponibilidade e agendar sua reunião.</p>
-            <button id="general-calendar-btn" class="btn btn-secondary">Ver Agenda do Dia</button>
-        </header>
+<header>
+    <h1 class="main-header-title">Agendamento de salas de reunião - Escritório Administrativo</h1>
+    <p>Selecione uma sala na planta para verificar a disponibilidade e agendar sua reunião.</p>
+    <button id="general-calendar-btn" class="btn btn-secondary">Ver Agenda do Dia</button>
+</header>
 
         <main>
             <div id="floor-plan-container">
