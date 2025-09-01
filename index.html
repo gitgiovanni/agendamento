@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- Estilos Visuais --- */
         :root {
             --cor-primaria: #4f46e5;
             --cor-primaria-hover: #4338ca;
@@ -26,7 +25,7 @@
         }
 
         body {
-            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: var(--cor-fundo);
             margin: 0;
             color: var(--cor-texto);
@@ -45,18 +44,9 @@
             margin-bottom: 1rem;
         }
 
-        header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--cor-texto);
-        }
+        header h1 { font-size: 2.5rem; font-weight: 700; color: var(--cor-texto); }
+        header p { font-size: 1.1rem; color: var(--cor-texto-claro); }
 
-        header p {
-            font-size: 1.1rem;
-            color: var(--cor-texto-claro);
-        }
-
-        /* --- Planta Baixa Melhorada --- */
         #floor-plan-container {
             position: relative;
             width: 100%;
@@ -77,14 +67,15 @@
             box-shadow: 0 1px 3px 0 var(--cor-sombra);
             border-radius: 0.5rem;
             display: flex;
-            flex-direction: column; /* Para empilhar nome e título */
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 0.5rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s ease-in-out;
-            overflow: hidden; /* Para esconder texto longo */
+            overflow: hidden;
+            word-break: break-word;
         }
 
         .room:hover {
@@ -93,84 +84,72 @@
             z-index: 10;
         }
         
+        .room-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px; /* Espaço entre nome e capacidade */
+        }
+
         .room-name {
             font-weight: 600;
             font-size: 1rem;
+            line-height: 1.2;
         }
-
+        
+        .room-capacity {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background-color: rgba(0,0,0,0.1);
+            padding: 2px 8px;
+            border-radius: 1rem;
+        }
+        .room-capacity svg { width: 14px; height: 14px; }
+        
         .meeting-title {
             font-size: 0.8rem;
             font-weight: 400;
-            margin-top: 4px;
+            margin-top: 8px;
             opacity: 0.9;
+            width: 100%;
         }
-
 
         .room.available { background-color: var(--cor-verde); color: white; border-color: #059669; }
         .room.occupied { background-color: var(--cor-vermelho); color: white; border-color: #dc2626; }
         
         /* Posições */
-        #sala1 { top: 40px; left: 40px; width: 200px; height: 120px; }
-        #sala2 { top: 40px; left: 280px; width: 250px; height: 120px; }
-        #sala3 { top: 200px; left: 40px; width: 300px; height: 150px; }
-        #sala4 { top: 200px; left: 380px; width: 200px; height: 280px; }
+        #sala1 { top: 40px; left: 40px; width: 220px; height: 120px; font-size: 0.9rem; } /* Caio */
+        #sala2 { top: 40px; left: 300px; width: 220px; height: 120px; font-size: 0.9rem; } /* Rafael */
+        #sala3 { top: 200px; left: 40px; width: 220px; height: 120px; font-size: 0.9rem; } /* Vanessa */
+        #sala4 { top: 200px; left: 300px; width: 220px; height: 200px; } /* Marli */
 
         /* --- Modals --- */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(17, 24, 39, 0.6);
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(4px);
-        }
-
-        .modal-content {
-            background-color: var(--cor-principal);
-            padding: 2.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-            width: 90%;
-            max-width: 800px;
-            animation: fadeInScale 0.3s ease-out;
-        }
-
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(17, 24, 39, 0.6); justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+        .modal-content { background-color: var(--cor-principal); padding: 2.5rem; border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); width: 90%; max-width: 800px; animation: fadeInScale 0.3s ease-out; }
         @keyframes fadeInScale { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--cor-borda);
-            padding-bottom: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--cor-borda); padding-bottom: 1rem; margin-bottom: 1.5rem; }
         .modal-title { font-size: 1.5rem; font-weight: 600; }
+        .modal-title .capacity-tag { font-size: 1rem; font-weight: 500; color: var(--cor-texto-claro); margin-left: 1rem; }
         .close-button { background: none; border: none; font-size: 2rem; cursor: pointer; color: var(--cor-texto-claro); padding: 0; line-height: 1; }
-        #modal-views { display: flex; gap: 2rem; }
-        #calendar-view { width: 50%; }
-        #schedule-view { width: 50%; }
+        #modal-views { display: flex; gap: 2rem; flex-wrap: wrap;}
+        #calendar-view, #schedule-view { width: 100%; min-width: 300px; flex: 1; }
         
-        /* Calendário e Grade */
+        /* Outros estilos (botões, calendário, etc. - sem alterações) */
         #calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
         #calendar div { padding: 0.5rem; text-align: center; border-radius: 50%; }
         .calendar-header { font-weight: 600; color: var(--cor-texto-claro); }
         .day { cursor: pointer; transition: background-color 0.2s; }
         .day:not(.empty):hover { background-color: #e5e7eb; }
         .day.selected { background-color: var(--cor-primaria); color: white; font-weight: 600; }
-        
         #time-slots, #general-schedule-list { max-height: 350px; overflow-y: auto; padding-right: 10px; }
         .time-slot { display: flex; flex-direction: column; padding: 1rem; border: 1px solid var(--cor-borda); border-radius: 0.5rem; margin-bottom: 0.75rem; }
         .time-slot-header { display: flex; justify-content: space-between; align-items: center; width: 100%;}
         .time-slot-info { font-weight: 500; }
         .booking-details { font-size: 0.9rem; color: var(--cor-texto-claro); margin-top: 0.5rem; }
         .booking-details strong { color: var(--cor-texto); }
-
-        /* Botões e Formulário */
         .btn { padding: 0.6rem 1.2rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
         .btn-primary { background-color: var(--cor-primaria); color: white; }
         .btn-primary:hover { background-color: var(--cor-primaria-hover); }
@@ -178,40 +157,30 @@
         .btn-secondary:hover { background-color: #f9fafb; }
         .btn-danger { background: none; border: none; color: var(--cor-vermelho); font-size: 1.2rem; cursor: pointer;}
         .btn-danger:hover { opacity: 0.7; }
-        
         .booking-form { display: none; flex-direction: column; gap: 0.75rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--cor-borda); }
         .form-input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--cor-borda); border-radius: 0.375rem; box-sizing: border-box; }
         .form-actions { display: flex; justify-content: flex-end; gap: 0.5rem; }
-        
-        /* Modal Calendário Geral */
-        .general-schedule-item {
-            padding: 1rem;
-            background-color: #f9fafb;
-            border: 1px solid var(--cor-borda);
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-        }
+        .general-schedule-item { padding: 1rem; background-color: #f9fafb; border: 1px solid var(--cor-borda); border-radius: 0.5rem; margin-bottom: 1rem; }
         .general-schedule-item p { margin: 0; }
         .general-schedule-item .time { font-weight: 600; font-size: 1.1rem; }
         .general-schedule-item .room-name { color: var(--cor-primaria); font-weight: 500; }
-
     </style>
 </head>
 <body>
 
     <div class="container">
         <header>
-            <h1>Sistema de Agendamento</h1>
+            <h1>Agendamento de Salas</h1>
             <p>Selecione uma sala na planta para verificar a disponibilidade e agendar sua reunião.</p>
             <button id="general-calendar-btn" class="btn btn-secondary">Ver Agenda do Dia</button>
         </header>
 
         <main>
             <div id="floor-plan-container">
-                <div id="sala1" class="room" data-room-id="1" data-room-name="Sala Inovação"></div>
-                <div id="sala2" class="room" data-room-id="2" data-room-name="Sala Foco"></div>
-                <div id="sala3" class="room" data-room-id="3" data-room-name="Sala Colaboração"></div>
-                <div id="sala4" class="room" data-room-id="4" data-room-name="Sala Brainstorm"></div>
+                <div id="sala1" class="room" data-room-id="1"></div>
+                <div id="sala2" class="room" data-room-id="2"></div>
+                <div id="sala3" class="room" data-room-id="3"></div>
+                <div id="sala4" class="room" data-room-id="4"></div>
             </div>
         </main>
     </div>
@@ -219,30 +188,22 @@
     <div id="booking-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modal-room-name" class="modal-title">Nome da Sala</h2>
+                <h2 id="modal-room-name" class="modal-title"></h2>
                 <button class="close-button" data-target="#booking-modal">&times;</button>
             </div>
             <div id="modal-views">
-                <div id="calendar-view">
-                    <h3 id="month-display">Mês</h3>
-                    <div id="calendar"></div>
-                </div>
-                <div id="schedule-view">
-                    <h3 id="schedule-title">Selecione um dia</h3>
-                    <div id="time-slots"></div>
-                </div>
+                <div id="calendar-view"> <h3 id="month-display">Mês</h3> <div id="calendar"></div> </div>
+                <div id="schedule-view"> <h3 id="schedule-title">Selecione um dia</h3> <div id="time-slots"></div> </div>
             </div>
         </div>
     </div>
-
     <div id="general-calendar-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title">Agenda Completa do Dia</h2>
                 <button class="close-button" data-target="#general-calendar-modal">&times;</button>
             </div>
-            <div id="general-schedule-list">
-                </div>
+            <div id="general-schedule-list"></div>
         </div>
     </div>
     
@@ -269,10 +230,9 @@
         const bookingModal = document.getElementById('booking-modal');
         const generalModal = document.getElementById('general-calendar-modal');
         const modalRoomNameEl = document.getElementById('modal-room-name');
-        const calendarEl = document.getElementById('calendar');
-        const monthDisplayEl = document.getElementById('month-display');
-        const timeSlotsEl = document.getElementById('time-slots');
-        const scheduleTitleEl = document.getElementById('schedule-title');
+        
+        // Ícone de pessoa (SVG) para ser reutilizado
+        const userIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
 
         // --- LÓGICA DE MODAIS ---
         function openModal(modalElement) { modalElement.style.display = 'flex'; }
@@ -280,7 +240,14 @@
         
         function openBookingModal(roomId) {
             selectedRoomId = roomId;
-            modalRoomNameEl.textContent = roomsData[roomId]?.name || "Carregando...";
+            const room = roomsData[roomId];
+            if (!room) return;
+            
+            modalRoomNameEl.innerHTML = `
+                ${room.name} 
+                <span class="capacity-tag">(${userIconSVG} ${room.capacity} lugares)</span>
+            `;
+            
             openModal(bookingModal);
             selectedDate = new Date();
             loadCalendar();
@@ -289,145 +256,28 @@
 
         // --- LÓGICA DO CALENDÁRIO GERAL ---
         function openGeneralCalendar() {
+            // (Esta função continua igual à versão anterior)
             const listEl = document.getElementById('general-schedule-list');
             listEl.innerHTML = '';
             const today = new Date();
             const dateKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
-            
             let allBookingsToday = [];
-
-            // Coleta todos os agendamentos de hoje
             for (const roomId in roomsData) {
                 const dayBookings = roomsData[roomId].bookings?.[dateKey] || [];
-                dayBookings.forEach(booking => {
-                    allBookingsToday.push({
-                        ...booking,
-                        roomName: roomsData[roomId].name
-                    });
-                });
+                dayBookings.forEach(booking => allBookingsToday.push({ ...booking, roomName: roomsData[roomId].name }));
             }
-
-            // Ordena por hora
             allBookingsToday.sort((a, b) => a.hour - b.hour);
-
             if (allBookingsToday.length === 0) {
                 listEl.innerHTML = '<p style="text-align:center; color: var(--cor-texto-claro);">Nenhuma reunião agendada para hoje.</p>';
             } else {
                 allBookingsToday.forEach(booking => {
                     const itemEl = document.createElement('div');
                     itemEl.className = 'general-schedule-item';
-                    itemEl.innerHTML = `
-                        <p class="time">${String(booking.hour).padStart(2, '0')}:00 - Em <span class="room-name">${booking.roomName}</span></p>
-                        <p><strong>Reunião:</strong> ${booking.title}</p>
-                        <p><small><strong>Responsável:</strong> ${booking.user}</small></p>
-                    `;
+                    itemEl.innerHTML = `<p class="time">${String(booking.hour).padStart(2, '0')}:00 - Em <span class="room-name">${booking.roomName}</span></p><p><strong>Reunião:</strong> ${booking.title}</p><p><small><strong>Responsável:</strong> ${booking.user}</small></p>`;
                     listEl.appendChild(itemEl);
                 });
             }
-
             openModal(generalModal);
-        }
-
-        // --- LÓGICA DO CALENDÁRIO INDIVIDUAL E AGENDAMENTOS ---
-        function loadCalendar() {
-            calendarEl.innerHTML = '';
-            const dt = new Date(selectedDate);
-            dt.setDate(1);
-            const month = dt.getMonth(), year = dt.getFullYear();
-            monthDisplayEl.textContent = `${dt.toLocaleDateString('pt-BR', { month: 'long' })} ${year}`;
-            const firstDayOfMonth = dt.getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].forEach(d => {
-                const h = document.createElement('div'); h.className = 'calendar-header'; h.innerText = d; calendarEl.appendChild(h);
-            });
-            for (let i = 0; i < firstDayOfMonth; i++) {
-                const e = document.createElement('div'); e.classList.add('day', 'empty'); calendarEl.appendChild(e);
-            }
-            for (let i = 1; i <= daysInMonth; i++) {
-                const dayCell = document.createElement('div');
-                dayCell.classList.add('day');
-                dayCell.textContent = i;
-                if (i === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear()) {
-                    dayCell.classList.add('selected');
-                    loadScheduleForDate(selectedDate);
-                }
-                dayCell.addEventListener('click', () => {
-                    selectedDate = new Date(year, month, i);
-                    document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
-                    dayCell.classList.add('selected');
-                    loadScheduleForDate(selectedDate);
-                });
-                calendarEl.appendChild(dayCell);
-            }
-        }
-
-        function loadScheduleForDate(date) {
-            timeSlotsEl.innerHTML = '';
-            scheduleTitleEl.textContent = `Horários para ${date.toLocaleDateString('pt-BR')}`;
-            const dateKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-            const bookingsForDay = roomsData[selectedRoomId]?.bookings?.[dateKey] || [];
-
-            for (let hour = 8; hour < 18; hour++) {
-                const booking = bookingsForDay.find(b => b.hour === hour);
-                const timeSlotEl = document.createElement('div');
-                timeSlotEl.classList.add('time-slot');
-
-                if (booking) {
-                    timeSlotEl.innerHTML = `
-                        <div class="time-slot-header">
-                            <span class="time-slot-info">${String(hour).padStart(2, '0')}:00 - ${String(hour + 1).padStart(2, '0')}:00</span>
-                            <button class="btn-danger cancel-btn" title="Cancelar Reserva">🗑️</button>
-                        </div>
-                        <div class="booking-details"><strong>${booking.title}</strong><br>Agendado por: ${booking.user}</div>`;
-                    timeSlotEl.querySelector('.cancel-btn').onclick = () => cancelTimeSlot(date, booking);
-                } else {
-                    timeSlotEl.innerHTML = `
-                        <div class="time-slot-header">
-                            <span class="time-slot-info">${String(hour).padStart(2, '0')}:00 - ${String(hour + 1).padStart(2, '0')}:00</span>
-                            <button class="btn btn-primary reserve-btn">Reservar</button>
-                        </div>
-                        <div class="booking-form">
-                            <input type="text" placeholder="Título da Reunião" class="form-input title-input">
-                            <input type="text" placeholder="Seu Nome" class="form-input user-input">
-                            <div class="form-actions"><button class="btn btn-primary confirm-reserve-btn">Confirmar</button></div>
-                        </div>`;
-                    const reserveBtn = timeSlotEl.querySelector('.reserve-btn');
-                    const bookingForm = timeSlotEl.querySelector('.booking-form');
-                    reserveBtn.onclick = () => { bookingForm.style.display = 'flex'; reserveBtn.style.display = 'none'; };
-                    timeSlotEl.querySelector('.confirm-reserve-btn').onclick = () => {
-                        const title = timeSlotEl.querySelector('.title-input').value;
-                        const user = timeSlotEl.querySelector('.user-input').value;
-                        reserveTimeSlot(date, hour, title, user);
-                    };
-                }
-                timeSlotsEl.appendChild(timeSlotEl);
-            }
-        }
-        
-        async function reserveTimeSlot(date, hour, title, user) {
-            if (!title || !user) { alert("Por favor, preencha o título e seu nome."); return; }
-            const dateKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-            const roomDocRef = doc(db, "rooms", selectedRoomId);
-            const newBooking = { hour, title, user };
-            try {
-                await updateDoc(roomDocRef, { [`bookings.${dateKey}`]: arrayUnion(newBooking) });
-                alert("Sala reservada com sucesso!");
-            } catch(e) { console.error("Erro ao reservar: ", e); alert("Ocorreu um erro."); }
-        }
-
-        async function cancelTimeSlot(date, booking) {
-            if (!confirm(`Tem certeza que deseja cancelar a reserva "${booking.title}"?`)) return;
-            const dateKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-            const roomDocRef = doc(db, "rooms", selectedRoomId);
-            try {
-                await updateDoc(roomDocRef, { [`bookings.${dateKey}`]: arrayRemove(booking) });
-                alert("Reserva cancelada!");
-            } catch (e) { console.error("Erro ao cancelar: ", e); alert("Ocorreu um erro."); }
-        }
-
-        function clearSchedule() {
-            scheduleTitleEl.textContent = 'Selecione um dia';
-            timeSlotsEl.innerHTML = '<p style="color: var(--cor-texto-claro); text-align: center;">Selecione um dia para ver os horários.</p>';
         }
 
         // --- LÓGICA DA PLANTA BAIXA (ATUALIZADA) ---
@@ -438,31 +288,44 @@
 
             document.querySelectorAll('.room').forEach(roomEl => {
                 const roomId = roomEl.dataset.roomId;
-                const roomName = roomEl.dataset.roomName;
-                const bookingsToday = roomsData[roomId]?.bookings?.[todayKey] || [];
+                const room = roomsData[roomId];
+                if (!room) return; // Se os dados ainda não carregaram, não faz nada
+
+                const bookingsToday = room.bookings?.[todayKey] || [];
                 const currentBooking = bookingsToday.find(b => b.hour === currentHour);
                 
                 roomEl.classList.remove('available', 'occupied');
                 
+                // Monta o HTML interno da sala
+                let roomHTML = `
+                    <div class="room-info">
+                        <span class="room-name">${room.name}</span>
+                        <span class="room-capacity">${userIconSVG} ${room.capacity}</span>
+                    </div>
+                `;
+
                 if (currentBooking) {
                     roomEl.classList.add('occupied');
-                    roomEl.innerHTML = `<span class="room-name">${roomName}</span><span class="meeting-title">${currentBooking.title}</span>`;
+                    roomHTML += `<span class="meeting-title">${currentBooking.title}</span>`;
                 } else {
                     roomEl.classList.add('available');
-                    roomEl.innerHTML = `<span class="room-name">${roomName}</span>`;
                 }
+                
+                roomEl.innerHTML = roomHTML;
             });
         }
 
-        // --- INICIALIZAÇÃO ---
+        // --- INICIALIZAÇÃO E FUNÇÕES DE AGENDAMENTO (sem grandes alterações) ---
+        const calendarEl = document.getElementById('calendar');
+        const monthDisplayEl = document.getElementById('month-display');
+        const timeSlotsEl = document.getElementById('time-slots');
+        const scheduleTitleEl = document.getElementById('schedule-title');
+
         document.addEventListener('DOMContentLoaded', () => {
-            // Eventos de clique para abrir modais
             document.querySelectorAll('.room').forEach(roomEl => {
                 roomEl.addEventListener('click', () => openBookingModal(roomEl.dataset.roomId));
             });
             document.getElementById('general-calendar-btn').addEventListener('click', openGeneralCalendar);
-
-            // Eventos para fechar modais
             document.querySelectorAll('.close-button').forEach(btn => {
                 const modalToClose = document.querySelector(btn.dataset.target);
                 btn.onclick = () => closeModal(modalToClose);
@@ -472,21 +335,25 @@
                 if (event.target == generalModal) closeModal(generalModal);
             };
 
-            // Listener em tempo real do Firebase
             const roomsCollection = collection(db, "rooms");
             onSnapshot(roomsCollection, (snapshot) => {
                 console.log("Dados do Firebase atualizados!");
                 snapshot.docChanges().forEach((change) => {
                     roomsData[change.doc.id] = change.doc.data();
                 });
-                
                 updateRoomStatusOnFloorPlan();
-
                 if (bookingModal.style.display === 'flex' && selectedRoomId) {
                     loadScheduleForDate(selectedDate);
                 }
             });
         });
+        
+        // As funções de calendário, agendamento e cancelamento continuam iguais às da versão anterior
+        function loadCalendar(){const e=document.getElementById("calendar"),t=document.getElementById("month-display");e.innerHTML="";const n=new Date(selectedDate);n.setDate(1);const a=n.getMonth(),d=n.getFullYear();t.textContent=`${n.toLocaleDateString("pt-BR",{month:"long"})} ${d}`;const l=n.getDay(),o=new Date(d,a+1,0).getDate();["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"].forEach(t=>{const n=document.createElement("div");n.className="calendar-header",n.innerText=t,e.appendChild(n)});for(let t=0;t<l;t++){const n=document.createElement("div");n.classList.add("day","empty"),e.appendChild(n)}for(let t=1;t<=o;t++){const n=document.createElement("div");n.classList.add("day"),n.textContent=t,t===selectedDate.getDate()&&a===selectedDate.getMonth()&&d===selectedDate.getFullYear()&&(n.classList.add("selected"),loadScheduleForDate(selectedDate)),n.addEventListener("click",()=>{selectedDate=new Date(d,a,t),document.querySelectorAll(".day").forEach(e=>e.classList.remove("selected")),n.classList.add("selected"),loadScheduleForDate(selectedDate)}),e.appendChild(n)}}
+        function loadScheduleForDate(e){const t=document.getElementById("time-slots"),n=document.getElementById("schedule-title");t.innerHTML="",n.textContent=`Horários para ${e.toLocaleDateString("pt-BR")}`;const a=`${e.getFullYear()}-${e.getMonth()}-${e.getDate()}`,d=roomsData[selectedRoomId]?.bookings?.[a]||[];for(let e=8;e<18;e++){const n=d.find(t=>t.hour===e),a=document.createElement("div");a.classList.add("time-slot"),n? (a.innerHTML=`\n                        <div class="time-slot-header">\n                            <span class="time-slot-info">${String(e).padStart(2,"0")}:00 - ${String(e+1).padStart(2,"0")}:00</span>\n                            <button class="btn-danger cancel-btn" title="Cancelar Reserva">🗑️</button>\n                        </div>\n                        <div class="booking-details"><strong>${n.title}</strong><br>Agendado por: ${n.user}</div>`,a.querySelector(".cancel-btn").onclick=()=>cancelTimeSlot(selectedDate,n)):(a.innerHTML=`\n                        <div class="time-slot-header">\n                            <span class="time-slot-info">${String(e).padStart(2,"0")}:00 - ${String(e+1).padStart(2,"0")}:00</span>\n                            <button class="btn btn-primary reserve-btn">Reservar</button>\n                        </div>\n                        <div class="booking-form">\n                            <input type="text" placeholder="Título da Reunião" class="form-input title-input">\n                            <input type="text" placeholder="Seu Nome" class="form-input user-input">\n                            <div class="form-actions"><button class="btn btn-primary confirm-reserve-btn">Confirmar</button></div>\n                        </div>`,a.querySelector(".reserve-btn").onclick=()=>{a.querySelector(".booking-form").style.display="flex",a.querySelector(".reserve-btn").style.display="none"},a.querySelector(".confirm-reserve-btn").onclick=()=>{const t=a.querySelector(".title-input").value,n=a.querySelector(".user-input").value;reserveTimeSlot(selectedDate,e,t,n)}),t.appendChild(a)}}
+        async function reserveTimeSlot(e,t,n,a){if(!n||!a)return void alert("Por favor, preencha o título e seu nome.");const d=`${e.getFullYear()}-${e.getMonth()}-${e.getDate()}`,l=doc(db,"rooms",selectedRoomId),o={hour:t,title:n,user:a};try{await updateDoc(l,{[`bookings.${d}`]:arrayUnion(o)}),alert("Sala reservada com sucesso!")}catch(e){console.error("Erro ao reservar: ",e),alert("Ocorreu um erro.")}}
+        async function cancelTimeSlot(e,t){if(!confirm(`Tem certeza que deseja cancelar a reserva "${t.title}"?`))return;const n=`${e.getFullYear()}-${e.getMonth()}-${e.getDate()}`,a=doc(db,"rooms",selectedRoomId);try{await updateDoc(a,{[`bookings.${n}`]:arrayRemove(t)}),alert("Reserva cancelada!")}catch(e){console.error("Erro ao cancelar: ",e),alert("Ocorreu um erro.")}}
+        function clearSchedule(){document.getElementById("schedule-title").textContent="Selecione um dia",document.getElementById("time-slots").innerHTML='<p style="color: var(--cor-texto-claro); text-align: center;">Selecione um dia para ver os horários.</p>'}
     </script>
 </body>
 </html>
