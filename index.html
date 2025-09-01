@@ -44,8 +44,26 @@
             margin-bottom: 1rem;
         }
 
-        header h1 { font-size: 2.5rem; font-weight: 700; color: var(--cor-texto); }
-        header p { font-size: 1.1rem; color: var(--cor-texto-claro); }
+        header h1 { 
+            font-size: 2.5rem; 
+            font-weight: 700; 
+            color: var(--cor-texto); 
+            display: none; /* Oculta o título antigo */
+        }
+        
+        /* Novo título e subtítulo */
+        .new-header-title {
+            font-size: 1.8rem; /* Tamanho ajustado para o novo título */
+            font-weight: 700;
+            color: var(--cor-vermelho); /* Cor vermelha para o novo título */
+            margin-bottom: 0.5rem; /* Espaçamento entre o novo título e o parágrafo */
+        }
+
+        header p { 
+            font-size: 1.1rem; 
+            color: var(--cor-texto-claro); 
+            margin-top: 0; /* Garante que não haja margem superior extra */
+        }
 
         #floor-plan-container {
             position: relative;
@@ -95,6 +113,7 @@
             font-weight: 600;
             font-size: 1rem;
             line-height: 1.2;
+            white-space: pre-wrap; /* Permite quebras de linha no nome */
         }
         
         .room-capacity {
@@ -166,7 +185,7 @@
 
     <div class="container">
         <header>
-            <h1>Agendamento de Salas</h1>
+            <h1 class="new-header-title">Agendamento de salas de reunião - Escritório Administrativo</h1>
             <p>Selecione uma sala na planta para verificar a disponibilidade e agendar sua reunião.</p>
             <button id="general-calendar-btn" class="btn btn-secondary">Ver Agenda do Dia</button>
         </header>
@@ -204,7 +223,6 @@
     </div>
     
     <script type="module">
-        // Importa as funções que vamos usar do Firebase (arrayRemove não é mais necessário)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, collection, doc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -288,10 +306,11 @@
                 
                 roomEl.classList.remove('available', 'occupied');
                 
+                // --- ALTERAÇÃO AQUI: Novo formato de texto para nome e capacidade ---
                 let roomHTML = `
                     <div class="room-info">
-                        <span class="room-name">${room.name}</span>
-                        <span class="room-capacity">${userIconSVG} ${room.capacity}</span>
+                        <span class="room-name">Sala de reunião<br>${room.name}</span>
+                        <span class="room-capacity">${userIconSVG} Capacidade: ${room.capacity} pessoas</span>
                     </div>
                 `;
 
