@@ -866,6 +866,56 @@
             if (event.target.classList.contains('modal')) event.target.style.display = 'none';
         };
 
+        // --- LÓGICA DO BOTÃO "VER AGENDA DO DIA" ---
+    document.getElementById('general-calendar-btn').addEventListener('click', () => {
+        const list = document.getElementById('general-schedule-list');
+        list.innerHTML = "";
+        
+        const now = new Date();
+        const dateKey = formatDateKey(now);
+        let allBookings = [];
+
+        // 1. Coleta todas as reuniões de hoje de todas as salas
+        Object.values(roomsData).forEach(room => {
+            if (room.bookings && room.bookings[dateKey]) {
+                room.bookings[dateKey].forEach(booking => {
+                    allBookings.push({
+                        ...booking,
+                        roomName: room.name
+                    });
+                });
+            }
+        });
+
+        // 2. Ordena por horário (do mais cedo para o mais tarde)
+        allBookings.sort((a, b) => a.hour - b.hour);
+
+        // 3. Exibe na tela
+        if (allBookings.length === 0) {
+            list.innerHTML = '<div style="text-align:center; padding: 3rem; color: var(--cor-texto-claro);"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3; margin-bottom:1rem;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><br>Nenhuma reunião agendada para hoje nesta unidade.</div>';
+        } else {
+            allBookings.forEach(b => {
+                const item = document.createElement('div');
+                // Reutilizando o estilo elegante dos cards de lista
+                item.className = 'admin-booking-item'; 
+                item.style.cursor = 'default';
+                item.innerHTML = `
+                    <div class="admin-booking-info" style="width: 100%;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                            <strong style="font-size:1.2rem; color:var(--cor-primaria);">${b.hour}:00 - ${b.hour+1}:00</strong>
+                            <span style="background:#f1f5f9; padding:2px 8px; border-radius:4px; font-size:0.8rem; font-weight:600; color:var(--cor-texto-claro);">${b.roomName}</span>
+                        </div>
+                        <div style="font-weight:600; font-size:1rem;">${b.title}</div>
+                        <div class="admin-booking-details">Responsável: ${b.user}</div>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        document.getElementById('general-calendar-modal').style.display = 'flex';
+    });
+
         // Inicia
         loadBranches();
     </script>
