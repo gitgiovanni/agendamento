@@ -231,10 +231,20 @@
         
         #calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
         .calendar-header { font-weight: 600; font-size: 0.9rem; color: var(--cor-texto-claro); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;}
-        .day { padding: 0.6rem; cursor: pointer; border-radius: 0.5rem; font-weight: 500; transition: all 0.2s;}
+/* ... outros estilos ... */
+        
+        .day { padding: 0.6rem; cursor: pointer; border-radius: 0.5rem; font-weight: 500; transition: all 0.2s; border: 2px solid transparent; } /* Adicionei borda transparente padrão para evitar pulo no layout */
+        
         .day:hover:not(.empty) { background-color: #f1f5f9; color: var(--cor-primaria); }
-        .day.selected { background-color: var(--cor-primaria); color: white; box-shadow: 0 4px 6px rgba(199, 29, 35, 0.3);}
-        .day.today { border: 2px solid var(--cor-primaria); color: var(--cor-primaria); }
+        
+        /* Estilo do dia de HOJE (apenas borda e texto vermelho) */
+        .day.today { border: 2px solid var(--cor-primaria); color: var(--cor-primaria); font-weight: 700; }
+        
+        /* Estilo do dia SELECIONADO (Fundo vermelho e texto branco) */
+        /* O !important garante que o branco sobrescreva o vermelho do 'today' */
+        .day.selected { background-color: var(--cor-primaria); color: white !important; box-shadow: 0 4px 6px rgba(199, 29, 35, 0.3); border-color: var(--cor-primaria); }
+
+        /* ... */
 
         /* Estilos dos Horários */
         #schedule-title { color: var(--cor-secundaria); font-weight: 700; margin-top: 0; margin-bottom: 1.5rem;}
