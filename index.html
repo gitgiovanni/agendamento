@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Central de Agendamentos - Multi-filiais</title>
+    <title>Central de Agendamentos Andra</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
+        /* --- PALETA DE CORES ATUALIZADA (Vermelho Andra) --- */
         :root {
-            --cor-primaria: #4f46e5;
-            --cor-primaria-hover: #4338ca;
-            --cor-secundaria: #6b7280;
+            --cor-primaria: #c71d23; /* Vermelho Andra */
+            --cor-primaria-hover: #a5171d; /* Um tom mais escuro para hover */
+            --cor-secundaria: #1f2937; /* Preto/Cinza escuro para textos fortes */
             --cor-verde: #10b981;
-            --cor-vermelho: #ef4444;
-            --cor-fundo: #f3f4f6;
+            --cor-vermelho: #ef4444; /* Vermelho para erros/ocupado (mantido para contraste) */
+            --cor-fundo: #f8fafc; /* Fundo ligeiramente mais claro */
             --cor-principal: #ffffff;
-            --cor-borda: #d1d5db;
-            --cor-texto: #1f2937;
-            --cor-texto-claro: #6b7280;
-            --cor-sombra: rgba(0, 0, 0, 0.05);
+            --cor-borda: #e2e8f0;
+            --cor-texto: #334155;
+            --cor-texto-claro: #64748b;
         }
 
         body {
@@ -37,71 +37,108 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
+            box-sizing: border-box;
         }
 
-        /* --- TELA DE SELEÇÃO DE FILIAL --- */
+        /* --- NOVA TELA DE SELEÇÃO DE FILIAL (SOFISTICADA) --- */
         #selector-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--cor-primaria);
+            /* Gradiente escuro e sofisticado com toque do vermelho Andra */
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d0506 100%);
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
             z-index: 2000;
             color: white;
-            text-align: center;
-            padding: 20px;
+            padding: 40px 20px;
             box-sizing: border-box;
+            overflow-y: auto; /* Permite rolar se tiver muitas filiais */
         }
         
-        #selector-screen h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-        #selector-screen p { font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9; }
+        .selector-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeDown 0.8s ease-out;
+        }
+        .selector-header h1 { font-size: 2.8rem; margin: 0 0 1rem 0; font-weight: 700; letter-spacing: -1px; }
+        .selector-header h1 span { color: var(--cor-primaria); }
+        .selector-header p { font-size: 1.2rem; opacity: 0.8; max-width: 600px; margin: 0 auto; font-weight: 300;}
 
-        .branch-selector-container {
-            background: white;
-            padding: 2rem;
+        /* Novo Grid de Cartões para as Filiais */
+        #branch-list-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 900px;
+            animation: fadeUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .branch-card-selector {
+            background-color: rgba(255, 255, 255, 0.95);
+            color: var(--cor-secundaria);
+            padding: 2rem 1.5rem;
             border-radius: 1rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            width: 100%;
-            max-width: 400px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
         }
 
-        select.branch-select {
-            width: 100%;
-            padding: 12px;
-            font-size: 1rem;
-            border: 2px solid var(--cor-borda);
-            border-radius: 0.5rem;
-            margin-bottom: 1.5rem;
-            font-family: inherit;
-            color: var(--cor-texto);
+        .branch-card-selector:hover {
+            transform: translateY(-8px);
+            border-color: var(--cor-primaria);
+            box-shadow: 0 20px 25px -5px rgba(199, 29, 35, 0.3); /* Sombra vermelha suave */
         }
+
+        .branch-icon {
+            width: 48px; height: 48px;
+            margin-bottom: 1rem;
+            color: var(--cor-primaria);
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        .branch-card-selector:hover .branch-icon { opacity: 1; }
+
+        .branch-name-display {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        /* Animações de entrada */
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
 
         /* --- LAYOUT PRINCIPAL --- */
-        header { text-align: center; margin-bottom: 2rem; }
+        header { text-align: center; margin-bottom: 3rem; border-bottom: 1px solid var(--cor-borda); padding-bottom: 2rem;}
         
         .header-buttons {
             display: flex;
             justify-content: center;
             gap: 1rem;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
             flex-wrap: wrap;
         }
 
         .main-header-title {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
-            color: var(--cor-primaria);
+            color: var(--cor-secundaria);
             margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
         }
 
-        /* --- NOVO LAYOUT DE SALAS (GRID) --- */
+        /* --- LAYOUT DE SALAS (GRID) --- */
         #rooms-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
+            gap: 2rem;
         }
         
         .room-card {
@@ -115,102 +152,120 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.2s ease-in-out;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             position: relative;
             overflow: hidden;
         }
 
         .room-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
             border-color: var(--cor-primaria);
         }
 
-        .room-card.available { border-left: 6px solid var(--cor-verde); }
-        .room-card.occupied { border-left: 6px solid var(--cor-vermelho); }
+        .room-card.available { border-top: 4px solid var(--cor-verde); }
+        .room-card.occupied { border-top: 4px solid var(--cor-primaria); } /* Usando vermelho Andra para ocupado */
 
         .room-status-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
+            margin-bottom: 1rem;
             font-size: 0.75rem;
             font-weight: 700;
             padding: 0.25rem 0.75rem;
-            border-radius: 1rem;
+            border-radius: 2rem;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .status-livre { background-color: #d1fae5; color: #065f46; }
-        .status-ocupada { background-color: #fee2e2; color: #991b1b; }
+        .status-livre { background-color: #ecfdf5; color: #047857; }
+        .status-ocupada { background-color: #fff1f2; color: var(--cor-primaria); }
 
         .room-name {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin: 1rem 0 0.5rem 0;
-            color: var(--cor-texto);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            color: var(--cor-secundaria);
         }
 
         .room-capacity {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             font-size: 0.9rem;
             color: var(--cor-texto-claro);
-            background-color: #f3f4f6;
-            padding: 4px 10px;
-            border-radius: 1rem;
+            font-weight: 500;
         }
-        .room-capacity svg { width: 16px; height: 16px; }
+        .room-capacity svg { width: 18px; height: 18px; opacity: 0.7; }
 
         .meeting-info {
-            margin-top: 1rem;
-            padding: 0.75rem;
-            background-color: #fef2f2;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #fff1f2; /* Fundo avermelhado bem suave */
             border-radius: 0.5rem;
             width: 100%;
             box-sizing: border-box;
+            border-left: 3px solid var(--cor-primaria);
         }
-        .meeting-title { font-weight: 600; font-size: 0.9rem; color: #991b1b; display: block; }
-        .meeting-user { font-size: 0.8rem; color: #ef4444; }
+        .meeting-title { font-weight: 600; font-size: 0.95rem; color: var(--cor-primaria); display: block; margin-bottom: 4px;}
+        .meeting-user { font-size: 0.85rem; color: var(--cor-texto); }
 
-        /* --- MODAIS (Mantidos e Ajustados) --- */
-        .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(17, 24, 39, 0.6); justify-content: center; align-items: center; backdrop-filter: blur(4px); }
-        .modal-content { background-color: var(--cor-principal); padding: 2.5rem; border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); width: 90%; max-width: 800px; animation: fadeInScale 0.3s ease-out; max-height: 90vh; overflow-y: auto; }
-        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        /* --- MODAIS (Estilo atualizado) --- */
+        .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { background-color: var(--cor-principal); padding: 2.5rem; border-radius: 1.2rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); width: 90%; max-width: 850px; animation: fadeInScale 0.3s ease-out; max-height: 90vh; overflow-y: auto; }
+        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.98) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--cor-borda); padding-bottom: 1rem; margin-bottom: 1.5rem; }
-        .modal-title { font-size: 1.5rem; font-weight: 600; }
-        .close-button { background: none; border: none; font-size: 2rem; cursor: pointer; color: var(--cor-texto-claro); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; margin-bottom: 2rem; border-bottom: 2px solid #f1f5f9;}
+        .modal-title { font-size: 1.5rem; font-weight: 700; color: var(--cor-secundaria); margin: 0;}
+        .close-button { background: none; border: none; font-size: 2.2rem; cursor: pointer; color: #94a3b8; transition: color 0.2s; padding: 0; line-height: 1;}
+        .close-button:hover { color: var(--cor-primaria); }
         
         /* Layout interno do modal de agendamento */
-        #modal-views { display: flex; gap: 2rem; flex-wrap: wrap; }
-        #calendar-view, #schedule-view { flex: 1; min-width: 300px; }
+        #modal-views { display: flex; gap: 3rem; flex-wrap: wrap; }
+        #calendar-view { flex: 1; min-width: 300px; border-right: 1px solid var(--cor-borda); padding-right: 2rem; }
+        #schedule-view { flex: 1.2; min-width: 320px; }
+        @media (max-width: 768px) { #calendar-view { border-right: none; padding-right: 0; border-bottom: 1px solid var(--cor-borda); padding-bottom: 2rem; }}
 
         /* Estilos do Calendário */
-        .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .calendar-nav button { background: none; border: 1px solid var(--cor-borda); border-radius: 50%; width: 32px; height: 32px; cursor: pointer; }
-        #calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
-        .day { padding: 0.5rem; cursor: pointer; border-radius: 50%; }
-        .day:hover:not(.empty) { background-color: #e5e7eb; }
-        .day.selected { background-color: var(--cor-primaria); color: white; }
-        .day.today { border: 2px solid var(--cor-primaria); }
+        .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .calendar-nav button { background: white; border: 1px solid var(--cor-borda); border-radius: 0.5rem; width: 36px; height: 36px; cursor: pointer; color: var(--cor-texto); transition: all 0.2s; display: flex; align-items: center; justify-content: center; font-weight: bold;}
+        .calendar-nav button:hover { border-color: var(--cor-primaria); color: var(--cor-primaria); background: #fff1f2;}
+        #month-display { font-weight: 600; color: var(--cor-secundaria); margin: 0; font-size: 1.1rem;}
+        
+        #calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
+        .calendar-header { font-weight: 600; font-size: 0.9rem; color: var(--cor-texto-claro); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;}
+        .day { padding: 0.6rem; cursor: pointer; border-radius: 0.5rem; font-weight: 500; transition: all 0.2s;}
+        .day:hover:not(.empty) { background-color: #f1f5f9; color: var(--cor-primaria); }
+        .day.selected { background-color: var(--cor-primaria); color: white; box-shadow: 0 4px 6px rgba(199, 29, 35, 0.3);}
+        .day.today { border: 2px solid var(--cor-primaria); color: var(--cor-primaria); }
 
         /* Estilos dos Horários */
-        .time-slot { border: 1px solid var(--cor-borda); border-radius: 0.5rem; padding: 1rem; margin-bottom: 0.75rem; }
+        #schedule-title { color: var(--cor-secundaria); font-weight: 700; margin-top: 0; margin-bottom: 1.5rem;}
+        .time-slot { border: 1px solid var(--cor-borda); border-radius: 0.8rem; padding: 1.2rem; margin-bottom: 1rem; background: white; transition: border-color 0.2s;}
+        .time-slot:hover { border-color: #cbd5e1; }
         .time-slot-header { display: flex; justify-content: space-between; align-items: center; }
-        .btn { padding: 0.6rem 1.2rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; transition: all 0.2s; }
-        .btn-primary { background-color: var(--cor-primaria); color: white; }
-        .btn-secondary { background-color: white; border: 1px solid var(--cor-borda); color: var(--cor-texto); }
-        .btn-danger { background-color: var(--cor-vermelho); color: white; }
+        .time-slot-time { font-weight: 600; font-size: 1.1rem; color: var(--cor-secundaria); }
+
+        .btn { padding: 0.7rem 1.5rem; border: none; border-radius: 0.6rem; cursor: pointer; font-weight: 600; transition: all 0.2s; font-family: inherit; font-size: 0.95rem;}
+        .btn-primary { background-color: var(--cor-primaria); color: white; box-shadow: 0 4px 6px rgba(199, 29, 35, 0.2); }
+        .btn-primary:hover { background-color: var(--cor-primaria-hover); transform: translateY(-2px); box-shadow: 0 6px 8px rgba(199, 29, 35, 0.3); }
+        .btn-secondary { background-color: white; border: 2px solid var(--cor-borda); color: var(--cor-texto); }
+        .btn-secondary:hover { border-color: var(--cor-texto-claro); background-color: #f8fafc; }
+        .btn-danger { background-color: white; color: var(--cor-vermelho); border: 2px solid rgba(239, 68, 68, 0.3); }
+        .btn-danger:hover { background-color: #fef2f2; border-color: var(--cor-vermelho); }
         
-        .booking-form { display: none; flex-direction: column; gap: 0.8rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--cor-borda); }
-        .form-input { padding: 0.6rem; border: 1px solid var(--cor-borda); border-radius: 0.3rem; width: 100%; box-sizing: border-box; }
-        .form-actions { display: flex; justify-content: flex-end; gap: 0.5rem; }
+        .booking-form { display: none; flex-direction: column; gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--cor-borda); animation: fadeDown 0.3s ease-out; }
+        .form-input { padding: 0.8rem 1rem; border: 2px solid var(--cor-borda); border-radius: 0.6rem; width: 100%; box-sizing: border-box; font-family: inherit; transition: border-color 0.2s; outline: none;}
+        .form-input:focus { border-color: var(--cor-primaria); }
+        .form-actions { display: flex; justify-content: flex-end; gap: 0.8rem; margin-top: 0.5rem;}
+
+        /* Admin List */
+        .admin-booking-item { border: 1px solid var(--cor-borda); padding: 1.2rem; margin-bottom: 1rem; border-radius: 0.8rem; display: flex; justify-content: space-between; align-items: center; background: white;}
+        .admin-booking-info strong { color: var(--cor-secundaria); font-size: 1.1rem; }
+        .admin-booking-details { color: var(--cor-texto-claro); margin-top: 4px; }
 
         /* Toasts */
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { padding: 1rem 1.5rem; color: white; border-radius: 0.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); opacity: 0; animation: slideIn 0.3s forwards; }
+        .toast { padding: 1rem 1.5rem; color: white; border-radius: 0.8rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); opacity: 0; animation: slideIn 0.3s forwards; font-weight: 500; display: flex; align-items: center;}
         .toast.success { background-color: var(--cor-verde); }
-        .toast.error { background-color: var(--cor-vermelho); }
+        .toast.error { background-color: var(--cor-primaria); }
         @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
 
     </style>
@@ -218,24 +273,27 @@
 <body>
 
     <div id="selector-screen">
-        <h1>Bem-vindo</h1>
-        <p>Selecione sua unidade para acessar o agendamento de salas</p>
-        <div class="branch-selector-container">
-            <select id="branch-select" class="branch-select">
-                <option value="" disabled selected>Carregando unidades...</option>
-            </select>
-            <button id="btn-enter-branch" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Acessar Agendamentos</button>
+        <div class="selector-header">
+            <h1>Central de Agendamentos <span>Andra</span></h1>
+            <p>Selecione sua unidade abaixo para gerenciar as salas de reunião.</p>
+        </div>
+        
+        <div id="branch-list-container">
+             <p style="color: white; opacity: 0.7; grid-column: 1 / -1; text-align: center;">Carregando unidades...</p>
         </div>
     </div>
 
     <div class="container" id="main-app" style="display: none;">
         <header>
             <h1 class="main-header-title" id="branch-title">Carregando...</h1>
-            <p>Selecione uma sala abaixo para verificar disponibilidade e agendar.</p>
+            <p style="color: var(--cor-texto-claro); font-size: 1.1rem;">Verifique a disponibilidade e agende sua reunião.</p>
             <div class="header-buttons">
-                <button id="change-branch-btn" class="btn btn-secondary">Trocar Unidade</button>
+                <button id="change-branch-btn" class="btn btn-secondary" style="display: flex; align-items: center; gap: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Trocar Unidade
+                </button>
                 <button id="general-calendar-btn" class="btn btn-secondary">Ver Agenda do Dia</button>
-                <button id="admin-cancel-btn" class="btn btn-danger">Cancelar Agendamento</button>
+                <button id="admin-cancel-btn" class="btn btn-danger">Painel do Administrador</button>
             </div>
         </header>
 
@@ -247,7 +305,10 @@
     <div id="booking-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modal-room-name" class="modal-title"></h2>
+                <div>
+                    <span style="font-size: 0.9rem; color: var(--cor-texto-claro); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Agendar Sala</span>
+                    <h2 id="modal-room-name" class="modal-title"></h2>
+                </div>
                 <button class="close-button" data-target="#booking-modal">&times;</button>
             </div>
             <div id="modal-views">
@@ -270,7 +331,7 @@
     <div id="general-calendar-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Agenda Completa do Dia</h2>
+                <h2 class="modal-title">Agenda Completa do Dia</h2>
                 <button class="close-button" data-target="#general-calendar-modal">&times;</button>
             </div>
             <div id="general-schedule-list"></div>
@@ -278,23 +339,24 @@
     </div>
 
     <div id="password-modal" class="modal">
-        <div class="modal-content" style="max-width: 400px;">
-            <div class="modal-header">
-                <h2>Acesso Restrito</h2>
-                <button class="close-button" data-target="#password-modal">&times;</button>
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <div class="modal-header" style="justify-content: center; border-bottom: none; padding-bottom: 0;">
+                <h2 class="modal-title">Acesso Administrativo</h2>
             </div>
-            <p style="text-align: center; margin-bottom: 1rem;">Digite a senha de administrador para cancelar reservas.</p>
-            <input type="password" id="admin-password-input" class="form-input" placeholder="Senha">
-            <button id="password-submit-btn" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Entrar</button>
+            <p style="color: var(--cor-texto-claro); margin-bottom: 2rem;">Insira a senha para gerenciar agendamentos.</p>
+            <input type="password" id="admin-password-input" class="form-input" placeholder="Senha de acesso" style="text-align: center; font-size: 1.2rem;">
+            <button id="password-submit-btn" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem; padding: 1rem;">Acessar Painel</button>
+             <button class="btn btn-secondary close-button-alt" data-target="#password-modal" style="width: 100%; margin-top: 0.8rem; border: none;">Cancelar</button>
         </div>
     </div>
     
     <div id="admin-cancel-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Painel de Cancelamento</h2>
+                <h2 class="modal-title">Painel de Cancelamento</h2>
                 <button class="close-button" data-target="#admin-cancel-modal">&times;</button>
             </div>
+            <p style="color: var(--cor-texto-claro); margin-bottom: 1.5rem;">Visualizando agendamentos futuros desta unidade.</p>
             <div id="admin-cancel-list"></div>
         </div>
     </div>
@@ -317,84 +379,88 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         
-        // ESTADO GLOBAL
         let currentBranchId = null;
-        let currentBranchName = "";
         let roomsData = {};
-        let unsubscribeRooms = null; // Para parar de ouvir quando trocar de filial
+        let unsubscribeRooms = null;
         let selectedRoomId = null;
         let selectedDate = new Date();
         const userIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
-        
-        // --- INICIALIZAÇÃO: Carregar lista de filiais ---
+        const buildingIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="branch-icon"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2z"/></svg>`;
+
+        // --- FUNÇÃO ALTERADA: Carregar filiais como CARDS ---
         async function loadBranches() {
-            const selectEl = document.getElementById('branch-select');
-            selectEl.innerHTML = '<option value="" disabled selected>Carregando...</option>';
+            const container = document.getElementById('branch-list-container');
+            container.innerHTML = '<p style="color: white; opacity: 0.7; grid-column: 1 / -1; text-align: center;">Carregando unidades...</p>';
             
             try {
                 const querySnapshot = await getDocs(collection(db, "filiais"));
-                selectEl.innerHTML = '<option value="" disabled selected>Selecione uma filial...</option>';
                 
+                if(querySnapshot.empty){
+                     container.innerHTML = '<p style="color: white; opacity: 0.7; grid-column: 1 / -1; text-align: center;">Nenhuma unidade encontrada.</p>';
+                     return;
+                }
+
+                container.innerHTML = ''; // Limpa o loading
+
                 querySnapshot.forEach((doc) => {
                     const filial = doc.data();
-                    const option = document.createElement("option");
-                    option.value = doc.id;
-                    option.textContent = filial.nome || `Filial ${doc.id}`;
-                    selectEl.appendChild(option);
+                    const branchName = filial.nome || `Filial ${doc.id}`;
+                    
+                    // Cria o cartão da filial
+                    const card = document.createElement("div");
+                    card.className = "branch-card-selector";
+                    card.innerHTML = `
+                        ${buildingIconSVG}
+                        <span class="branch-name-display">${branchName}</span>
+                    `;
+                    
+                    // Clique no cartão entra na filial
+                    card.onclick = () => enterBranch(doc.id, branchName);
+                    
+                    container.appendChild(card);
                 });
             } catch (error) {
                 console.error("Erro ao carregar filiais:", error);
-                selectEl.innerHTML = '<option>Erro ao carregar</option>';
+                container.innerHTML = '<p style="color: #ef4444; grid-column: 1 / -1; text-align: center;">Erro ao carregar unidades.</p>';
             }
         }
-
-        // --- SISTEMA DE NAVEGAÇÃO ENTRE TELAS ---
-        document.getElementById('btn-enter-branch').addEventListener('click', () => {
-            const selectEl = document.getElementById('branch-select');
-            const selectedId = selectEl.value;
-            const selectedName = selectEl.options[selectEl.selectedIndex].text;
-            
-            if (selectedId) {
-                enterBranch(selectedId, selectedName);
-            } else {
-                showToast("Por favor, selecione uma unidade.", "error");
-            }
-        });
 
         document.getElementById('change-branch-btn').addEventListener('click', () => {
             document.getElementById('main-app').style.display = 'none';
             document.getElementById('selector-screen').style.display = 'flex';
-            if (unsubscribeRooms) unsubscribeRooms(); // Para de ouvir a filial anterior
+            if (unsubscribeRooms) unsubscribeRooms();
             roomsData = {};
         });
 
         function enterBranch(branchId, branchName) {
             currentBranchId = branchId;
-            currentBranchName = branchName;
             
-            // UI Update
-            document.getElementById('selector-screen').style.display = 'none';
-            document.getElementById('main-app').style.display = 'block';
-            document.getElementById('branch-title').textContent = `Agendamentos - ${branchName}`;
-            
-            // Load Rooms
-            listenToRooms(branchId);
+            // Animação de saída suave da tela de seleção
+            const selectorScreen = document.getElementById('selector-screen');
+            selectorScreen.style.opacity = '0';
+            selectorScreen.style.transition = 'opacity 0.3s ease';
+
+            setTimeout(() => {
+                selectorScreen.style.display = 'none';
+                selectorScreen.style.opacity = '1'; // Reseta para a próxima vez
+                document.getElementById('main-app').style.display = 'block';
+                document.getElementById('branch-title').textContent = branchName;
+                listenToRooms(branchId);
+            }, 300);
         }
 
-        // --- LISTENER DO FIREBASE (CORAÇÃO DO SISTEMA) ---
         function listenToRooms(branchId) {
             const roomsGrid = document.getElementById('rooms-grid');
-            roomsGrid.innerHTML = '<p style="text-align:center; width:100%;">Carregando salas...</p>';
+            roomsGrid.innerHTML = '<p style="text-align:center; width:100%; color: var(--cor-texto-claro);">Sincronizando salas...</p>';
             
-            // O segredo: Ouvimos a subcoleção "rooms" DENTRO da filial selecionada
             const roomsCollectionRef = collection(db, "filiais", branchId, "rooms");
             
             unsubscribeRooms = onSnapshot(roomsCollectionRef, (snapshot) => {
                 roomsData = {};
-                roomsGrid.innerHTML = ''; // Limpa para redesenhar
+                roomsGrid.innerHTML = '';
                 
                 if (snapshot.empty) {
-                    roomsGrid.innerHTML = '<p style="text-align:center; width:100%;">Nenhuma sala cadastrada nesta filial ainda.</p>';
+                    roomsGrid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 3rem; background: white; border-radius: 1rem; border: 1px dashed var(--cor-borda); color: var(--cor-texto-claro);">Nenhuma sala cadastrada nesta unidade ainda.</div>';
                     return;
                 }
 
@@ -403,23 +469,20 @@
                     createRoomCard(doc.id, doc.data());
                 });
                 
-                // Atualiza status se o modal estiver aberto
                 if (document.getElementById('booking-modal').style.display === 'flex' && selectedRoomId) {
                     loadScheduleForDate(selectedDate);
                 }
             });
         }
 
-        // --- GERAÇÃO DOS CARDS (GRID) ---
         function createRoomCard(id, room) {
             const grid = document.getElementById('rooms-grid');
             const now = new Date();
             const todayKey = formatDateKey(now);
             const currentHour = now.getHours();
             
-            // Verifica status atual
             const bookingsToday = room.bookings?.[todayKey] || [];
-            const currentBooking = bookingsToday.find(b => b.hour === currentHour);
+            const currentBooking = bookingsToday.find(b => b.hour === currentHour && b.hour < 18); // Assume horário comercial até as 18h
             const isOccupied = !!currentBooking;
             
             const card = document.createElement('div');
@@ -428,29 +491,29 @@
             
             let html = `
                 <div class="room-status-badge ${isOccupied ? 'status-ocupada' : 'status-livre'}">
-                    ${isOccupied ? 'Ocupada' : 'Disponível'}
+                    ${isOccupied ? 'Ocupada agora' : 'Disponível'}
                 </div>
-                <div class="room-name">Sala de Reunião<br>${room.name}</div>
-                <div class="room-capacity">${userIconSVG} Capacidade: ${room.capacity || '?'} pessoas</div>
+                <div class="room-name">${room.name}</div>
+                <div class="room-capacity">${userIconSVG} Até ${room.capacity || '?'} pessoas</div>
             `;
             
             if (isOccupied) {
                 html += `
                     <div class="meeting-info">
-                        <span class="meeting-title">Em andamento:</span>
-                        <span>${currentBooking.title}</span><br>
-                        <span class="meeting-user">(${currentBooking.user})</span>
+                        <span class="meeting-title">${currentBooking.title}</span>
+                        <span class="meeting-user">Responsável: ${currentBooking.user}</span>
                     </div>
                 `;
             } else {
-                 html += `<div style="margin-top:1rem; color:var(--cor-verde); font-size:0.9rem;">Toque para agendar</div>`;
+                 html += `<div style="margin-top:1.5rem; color:var(--cor-verde); font-weight: 600; font-size:0.95rem; display: flex; align-items: center; gap: 5px;">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+                 Toque para agendar</div>`;
             }
             
             card.innerHTML = html;
             grid.appendChild(card);
         }
 
-        // --- FUNÇÕES UTILITÁRIAS ---
         function formatDateKey(date) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -462,12 +525,15 @@
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            toast.textContent = message;
+            // Ícone baseado no tipo
+            const icon = type === 'success' 
+                ? '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>' 
+                : '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+            toast.innerHTML = icon + message;
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // --- MODAL E AGENDAMENTO (Lógica adaptada para multi-filial) ---
         window.openBookingModal = function(roomId) {
             selectedRoomId = roomId;
             const room = roomsData[roomId];
@@ -490,34 +556,30 @@
             const daysInMonth = new Date(navDate.getFullYear(), navDate.getMonth() + 1, 0).getDate();
             const firstDayIndex = navDate.getDay();
             
-            // Cabeçalho dias
             ["D","S","T","Q","Q","S","S"].forEach(d => {
                 const el = document.createElement("div");
-                el.style.fontWeight = "bold"; el.innerText = d;
+                el.className = "calendar-header";
+                el.innerText = d;
                 calendarEl.appendChild(el);
             });
             
-            // Espaços vazios
             for(let i=0; i<firstDayIndex; i++) calendarEl.appendChild(document.createElement("div"));
             
-            // Dias
             const today = new Date();
             for(let i=1; i<=daysInMonth; i++) {
                 const dayEl = document.createElement("div");
                 dayEl.className = "day";
                 dayEl.textContent = i;
                 
-                // Marca dia selecionado
-                if(i === selectedDate.getDate() && navDate.getMonth() === selectedDate.getMonth()) 
+                if(i === selectedDate.getDate() && navDate.getMonth() === selectedDate.getMonth() && navDate.getFullYear() === selectedDate.getFullYear()) 
                     dayEl.classList.add("selected");
                 
-                // Marca hoje
                 if(i === today.getDate() && navDate.getMonth() === today.getMonth() && navDate.getFullYear() === today.getFullYear()) 
                     dayEl.classList.add("today");
                 
                 dayEl.onclick = () => {
                     selectedDate = new Date(navDate.getFullYear(), navDate.getMonth(), i);
-                    loadCalendar(); // Redesenha para mudar a seleção
+                    loadCalendar();
                     loadScheduleForDate(selectedDate);
                 };
                 calendarEl.appendChild(dayEl);
@@ -528,54 +590,77 @@
             const container = document.getElementById('time-slots');
             const title = document.getElementById('schedule-title');
             container.innerHTML = "";
-            title.textContent = `Horários para ${date.toLocaleDateString('pt-BR')}`;
+            
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const checkDate = new Date(date);
+            checkDate.setHours(0,0,0,0);
+
+            if(checkDate.getTime() < today.getTime()) {
+                 title.textContent = `Horários passados de ${date.toLocaleDateString('pt-BR')}`;
+                 container.innerHTML = '<p style="text-align:center; color:var(--cor-texto-claro); padding: 2rem;">Não é possível agendar em datas passadas.</p>';
+                 return;
+            }
+            
+            title.textContent = `Horários disponíveis para ${date.toLocaleDateString('pt-BR')}`;
             
             const dateKey = formatDateKey(date);
             const bookings = roomsData[selectedRoomId]?.bookings?.[dateKey] || [];
             
             for(let hour=8; hour<18; hour++) {
+                // Verifica se é hoje e se o horário já passou
+                const now = new Date();
+                if(checkDate.getTime() === today.getTime() && hour <= now.getHours()) {
+                    continue; // Pula horários que já passaram hoje
+                }
+
                 const booking = bookings.find(b => b.hour === hour);
                 const slot = document.createElement('div');
                 slot.className = 'time-slot';
                 
+                const timeString = `${String(hour).padStart(2,'0')}:00 - ${String(hour+1).padStart(2,'0')}:00`;
+
                 if(booking) {
+                    slot.style.background = "#fff1f2";
+                    slot.style.borderColor = "var(--cor-primaria)";
                     slot.innerHTML = `
                         <div class="time-slot-header">
-                            <strong>${hour}:00 - ${hour+1}:00</strong>
-                            <span style="color:var(--cor-vermelho)">Reservado</span>
+                            <span class="time-slot-time">${timeString}</span>
+                            <span style="color:var(--cor-primaria); font-weight:600; font-size: 0.9rem;">Reservado</span>
                         </div>
-                        <div style="font-size:0.9rem; margin-top:5px;">${booking.title} (${booking.user})</div>
+                        <div style="font-size:0.9rem; margin-top:8px; color: var(--cor-texto);"><strong>${booking.title}</strong><br><span style="color: var(--cor-texto-claro);">Agendado por: ${booking.user}</span></div>
                     `;
                 } else {
                     slot.innerHTML = `
                         <div class="time-slot-header">
-                            <strong>${hour}:00 - ${hour+1}:00</strong>
-                            <button class="btn btn-primary btn-reserve">Reservar</button>
+                            <span class="time-slot-time">${timeString}</span>
+                            <button class="btn btn-primary btn-reserve">Reservar horário</button>
                         </div>
                         <div class="booking-form">
-                            <input class="form-input title" placeholder="Assunto da Reunião">
-                            <input class="form-input user" placeholder="Seu Nome">
+                            <input class="form-input title" placeholder="Qual o assunto da reunião?">
+                            <input class="form-input user" placeholder="Seu nome completo">
                             <div class="form-actions">
                                 <button class="btn btn-secondary btn-cancel">Cancelar</button>
-                                <button class="btn btn-primary btn-confirm">Confirmar</button>
+                                <button class="btn btn-primary btn-confirm">Confirmar Agendamento</button>
                             </div>
                         </div>
                     `;
                     
-                    // Eventos dos botões
                     const form = slot.querySelector('.booking-form');
                     const btnReserve = slot.querySelector('.btn-reserve');
                     
-                    btnReserve.onclick = () => { form.style.display = 'flex'; btnReserve.style.display = 'none'; };
+                    btnReserve.onclick = () => { form.style.display = 'flex'; btnReserve.style.display = 'none'; slot.querySelector('.title').focus(); };
                     slot.querySelector('.btn-cancel').onclick = () => { form.style.display = 'none'; btnReserve.style.display = 'block'; };
                     
                     slot.querySelector('.btn-confirm').onclick = async (e) => {
                         const titleVal = slot.querySelector('.title').value;
                         const userVal = slot.querySelector('.user').value;
-                        if(!titleVal || !userVal) return showToast("Preencha todos os campos", "error");
+                        if(!titleVal || !userVal) return showToast("Preencha o assunto e seu nome.", "error");
                         
                         const btn = e.target;
-                        btn.textContent = "...";
+                        const originalText = btn.textContent;
+                        btn.textContent = "Agendando...";
+                        btn.disabled = true;
                         
                         try {
                             const roomRef = doc(db, "filiais", currentBranchId, "rooms", selectedRoomId);
@@ -584,35 +669,51 @@
                                     hour: hour, title: titleVal, user: userVal
                                 })
                             });
-                            showToast("Agendado com sucesso!");
+                            showToast("Sala reservada com sucesso!");
+                            // O snapshot vai atualizar a tela automaticamente
                         } catch(err) {
                             console.error(err);
-                            showToast("Erro ao agendar", "error");
+                            showToast("Não foi possível agendar. Tente novamente.", "error");
+                            btn.textContent = originalText;
+                            btn.disabled = false;
                         }
                     };
                 }
                 container.appendChild(slot);
             }
+            if(container.innerHTML === "") {
+                 container.innerHTML = '<p style="text-align:center; color:var(--cor-texto-claro); padding: 2rem;">Não há mais horários disponíveis para agendamento hoje.</p>';
+            }
         }
 
         function clearSchedule() {
-            document.getElementById('time-slots').innerHTML = '<p style="text-align:center; color:#888;">Selecione um dia no calendário.</p>';
+            document.getElementById('time-slots').innerHTML = '<div style="text-align:center; color:var(--cor-texto-claro); padding: 3rem; display:flex; flex-direction:column; align-items:center; gap:1rem;"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>Selecione um dia no calendário para ver os horários.</div>';
         }
 
-        // --- SISTEMA DE ADMINISTRAÇÃO (CANCELAMENTO) ---
-        // A senha ainda é verificada no cliente (inseguro para produção real, mas ok para uso interno simples)
         const ADMIN_PASS = "AgendasAndra123"; 
         
-        document.getElementById('admin-cancel-btn').onclick = () => document.getElementById('password-modal').style.display = 'flex';
+        document.getElementById('admin-cancel-btn').onclick = () => {
+            document.getElementById('password-modal').style.display = 'flex';
+            document.getElementById('admin-password-input').focus();
+        };
+
+        document.querySelectorAll('.close-button-alt').forEach(b => {
+             b.onclick = () => document.querySelector(b.dataset.target).style.display = 'none';
+        });
         
-        document.getElementById('password-submit-btn').onclick = () => {
+        document.getElementById('password-submit-btn').onclick = checkPassword;
+        document.getElementById('admin-password-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') checkPassword(); });
+
+        function checkPassword() {
             const input = document.getElementById('admin-password-input');
             if(input.value === ADMIN_PASS) {
                 document.getElementById('password-modal').style.display = 'none';
                 input.value = "";
                 openAdminPanel();
             } else {
-                showToast("Senha incorreta", "error");
+                showToast("Senha incorreta.", "error");
+                input.value = "";
+                input.focus();
             }
         };
 
@@ -620,10 +721,8 @@
             const list = document.getElementById('admin-cancel-list');
             list.innerHTML = "";
             const today = new Date(); today.setHours(0,0,0,0);
-            
             let found = false;
             
-            // Varre todas as salas carregadas
             Object.keys(roomsData).forEach(roomId => {
                 const room = roomsData[roomId];
                 if(!room.bookings) return;
@@ -634,49 +733,60 @@
                     
                     if(bDate >= today) {
                         room.bookings[dateKey].forEach(booking => {
-                            found = true;
-                            const item = document.createElement('div');
-                            item.style.border = "1px solid #eee";
-                            item.style.padding = "10px";
-                            item.style.marginBottom = "10px";
-                            item.style.borderRadius = "5px";
-                            item.innerHTML = `
-                                <div><strong>${room.name}</strong> - ${d}/${m}/${y} às ${booking.hour}:00</div>
-                                <div>${booking.title} (${booking.user})</div>
-                                <button class="btn btn-danger" style="margin-top:5px; font-size:0.8rem;">Cancelar Reserva</button>
-                            `;
-                            
-                            item.querySelector('button').onclick = async function() {
-                                if(!confirm("Tem certeza?")) return;
-                                try {
-                                    const roomRef = doc(db, "filiais", currentBranchId, "rooms", roomId);
-                                    await updateDoc(roomRef, {
-                                        [`bookings.${dateKey}`]: arrayRemove(booking)
-                                    });
-                                    showToast("Cancelado!");
-                                    item.remove();
-                                } catch(e) { showToast("Erro", "error"); }
-                            };
-                            list.appendChild(item);
+                            const now = new Date();
+                            if(bDate.getTime() > today.getTime() || (bDate.getTime() === today.getTime() && booking.hour > now.getHours())) {
+                                found = true;
+                                const item = document.createElement('div');
+                                item.className = 'admin-booking-item';
+                                item.innerHTML = `
+                                    <div class="admin-booking-info">
+                                        <strong>${room.name}</strong>
+                                        <div class="admin-booking-details">📅 ${d}/${m}/${y} às ${booking.hour}:00h</div>
+                                        <div class="admin-booking-details">👤 ${booking.title} (${booking.user})</div>
+                                    </div>
+                                    <button class="btn btn-danger">Cancelar</button>
+                                `;
+                                
+                                const cancelBtn = item.querySelector('button');
+                                cancelBtn.onclick = async function() {
+                                    if(cancelBtn.textContent !== "Confirmar?") {
+                                        cancelBtn.textContent = "Confirmar?";
+                                        setTimeout(() => cancelBtn.textContent = "Cancelar", 3000);
+                                        return;
+                                    }
+                                    
+                                    cancelBtn.textContent = "...";
+                                    cancelBtn.disabled = true;
+                                    try {
+                                        const roomRef = doc(db, "filiais", currentBranchId, "rooms", roomId);
+                                        await updateDoc(roomRef, { [`bookings.${dateKey}`]: arrayRemove(booking) });
+                                        showToast("Reserva cancelada.");
+                                        item.remove();
+                                        if(list.children.length === 0) list.innerHTML = "<p style='text-align:center; color:var(--cor-texto-claro);'>Nenhum agendamento futuro encontrado.</p>";
+                                    } catch(e) { showToast("Erro ao cancelar", "error"); cancelBtn.textContent = "Cancelar"; cancelBtn.disabled = false;}
+                                };
+                                list.appendChild(item);
+                            }
                         });
                     }
                 });
             });
             
-            if(!found) list.innerHTML = "<p>Nenhum agendamento futuro encontrado.</p>";
+            if(!found) list.innerHTML = "<p style='text-align:center; color:var(--cor-texto-claro); padding: 2rem;'>Nenhum agendamento futuro encontrado nesta unidade.</p>";
             document.getElementById('admin-cancel-modal').style.display = 'flex';
         }
 
-        // Navegação Meses
         document.getElementById('prev-month-btn').onclick = () => { selectedDate.setMonth(selectedDate.getMonth()-1); loadCalendar(); };
         document.getElementById('next-month-btn').onclick = () => { selectedDate.setMonth(selectedDate.getMonth()+1); loadCalendar(); };
 
-        // Fechar modais
         document.querySelectorAll('.close-button').forEach(b => {
             b.onclick = () => document.querySelector(b.dataset.target).style.display = 'none';
         });
+        
+        window.onclick = (event) => {
+            if (event.target.classList.contains('modal')) event.target.style.display = 'none';
+        };
 
-        // Inicializar
         loadBranches();
     </script>
 </body>
