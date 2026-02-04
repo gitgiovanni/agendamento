@@ -72,6 +72,7 @@
             padding: 2rem 2rem 1rem 2rem;
             background: white;
             border-bottom: 1px solid var(--cor-borda);
+            text-align: center; /* Centraliza itens do header */
         }
 
         .search-header h1 {
@@ -88,9 +89,31 @@
             font-size: 0.95rem;
         }
 
+        /* Novo estilo para o botão de Como Utilizar */
+        .btn-link {
+            background: none;
+            border: none;
+            color: var(--cor-primaria);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-top: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px;
+            transition: color 0.2s;
+        }
+        .btn-link:hover {
+            color: var(--cor-primaria-hover);
+        }
+
         .input-wrapper {
             position: relative;
             margin-top: 1.5rem;
+            text-align: left; /* Volta o input para a esquerda */
         }
         
         .search-icon {
@@ -335,6 +358,11 @@
                 <h1>Central de Reuniões <span>Andra</span></h1>
                 <p>Selecione sua unidade para gerenciar salas.</p>
                 
+                <button id="how-to-use-btn" class="btn-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    Como utilizar
+                </button>
+                
                 <div class="input-wrapper">
                     <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                     <input type="text" id="branch-search-input" placeholder="Buscar unidade (ex: Centro, Filial 23...)" autocomplete="off">
@@ -399,6 +427,18 @@
                 <button class="close-button" data-target="#general-calendar-modal">&times;</button>
             </div>
             <div id="general-schedule-list"></div>
+        </div>
+    </div>
+
+    <div id="tutorial-modal" class="modal">
+        <div class="modal-content" style="max-width: 95vh; padding: 1.5rem; text-align: center;">
+            <div class="modal-header">
+                <h2 class="modal-title">Como Utilizar</h2>
+                <button class="close-button" data-target="#tutorial-modal">&times;</button>
+            </div>
+            <div style="overflow-y: auto; max-height: 80vh;">
+                <img src="https://fluig.andra.com.br/volume/stream/Rmx1aWc=/P3Q9MSZ2b2w9RGVmYXVsdCZpZD0zNTc4OCZ2ZXI9MTAwMCZmaWxlPUdlbWluaV9HZW5lcmF0ZWRfSW1hZ2VfNzhsam8zNzhsam8zNzhsai5wbmcmY3JjPTIzODk5ODM2ODkmc2l6ZT03LjEzNjUzNyZ1SWQ9MjgmZlNJZD0xJnVTSWQ9MSZkPWZhbHNlJnRrbj0mcHVibGljVXJsPXRydWUmYXR0YWNoPWZhbHNl.png" alt="Como utilizar" style="width: 100%; height: auto; border-radius: 8px;">
+            </div>
         </div>
     </div>
 
@@ -523,6 +563,11 @@
             input.value = "";
             input.dispatchEvent(new Event('input'));
             input.focus();
+        });
+
+        // --- LÓGICA DO BOTÃO "COMO UTILIZAR" ---
+        document.getElementById('how-to-use-btn').addEventListener('click', () => {
+            document.getElementById('tutorial-modal').style.display = 'flex';
         });
 
         function enterBranch(branchId, branchName) {
